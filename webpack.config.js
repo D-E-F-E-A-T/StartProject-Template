@@ -2,8 +2,8 @@ const currentTask = process.env.npm_lifecycle_event;
 const path = require('path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const miniCSSExtractPlugin = require('mini-css-extract-plugin');
-const htmlWebpackPlugin = require("html-webpack-plugin");
-const fse = require("fs-extra");
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const fse = require('fs-extra');
 
 const postCSSPlugins = [
     require('postcss-import'),
@@ -36,7 +36,7 @@ let pages = fse.readdirSync('./src').filter(function(file) {
 })
 
 let config = {
-    entry: "./src/assets/scripts/main.js",
+    entry: './src/assets/scripts/main.js',
     plugins: pages,
     module: {
         rules: [
@@ -45,24 +45,24 @@ let config = {
     }
 };
 
-if(currentTask == "dev") {
+if(currentTask == 'dev') {
     cssConfig.use.unshift('style-loader');
     config.output= {
-        filename: "index.js",
-        path: path.resolve(__dirname, "src")
+        filename: 'index.js',
+        path: path.resolve(__dirname, 'src')
     };
     config.devServer= {
         before: function(src,server) {
             server._watch ('./**/*.html')
         },
-        contentBase: path.join(__dirname, "src"),
+        contentBase: path.join(__dirname, 'src'),
         hot: true,
         port: 3000
     };
-    config.mode = "development";
+    config.mode = 'development';
 };
 
-if(currentTask == "build") {
+if(currentTask == 'build') {
 
     config.module.rules.push({
         test: /\.js$/,
@@ -74,21 +74,23 @@ if(currentTask == "build") {
             }
         }
     });
+
     cssConfig.use.unshift(miniCSSExtractPlugin.loader);
+
     config.output= {
-        filename: "[name].[chunkhash].js",
-        chunkFilename: "[name].[chunkhash].js",
-        path: path.resolve(__dirname, "dist")
+        filename: '[name].[chunkhash].js',
+        chunkFilename: '[name].[chunkhash].js',
+        path: path.resolve(__dirname, 'dist')
     };
-    config.mode= "production";
+    config.mode= 'production';
     config.optimization= {
         splitChunks: {
-            chunks: "all"
+            chunks: 'all'
         }
     }
     config.plugins.push(
         new CleanWebpackPlugin(),
-        new miniCSSExtractPlugin({filename: "styles.[chunkhash].css"}),
+        new miniCSSExtractPlugin({filename: 'styles.[chunkhash].css'}),
         new runAfterCompile()
         )
 };
